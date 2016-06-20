@@ -1,0 +1,141 @@
+-----------------------------------------------------------------------
+ ------ Informatics 2D - 2015/16 - Second Assignment - Planning ------
+-----------------------------------------------------------------------
+ 
+ Write here you matriculation number (only - your name is not needed)
+ Matriculation Number: s1413557 
+1.1)
+NextTo(x,y).
+means x is a area next to area y,
+for example:
+NextTo(Drop,Park) and NextTo(Park,Drop).
+
+1.2)
+Car(x).
+Agent(x).
+At(x,y,s).
+to represent x is at area y in situation s,
+for example:
+At(x,Drop,s) and Car(x).
+
+1.3)
+Parked(x,s).
+Delivered(x,s).
+for example:
+At(Car,Park,s) and Parked(Car,s) and Car(Car).
+
+1.4)
+At(Agent,Drop,s) and At(Car,Drop,s)
+ and Car(Car) and Agent(Agent)
+ and NextTo(Drop,Park) and NextTo(Park,Drop)
+ and NextTo(Park,Pick) and NextTo(Pick,Park).
+
+1.5)
+At(a,x,s) and NextTo(x,y) and Agent(a) => Poss(Move(y),s).
+Poss(Move(y),s) => At(a,y,Result(Move(y),s)).
+
+1.6)
+At(a,Park,s) and At(c,Park,s) and Car(c) and Agent(a) => Poss(Park(c),s).
+Poss(Park(),s) => At(a,Park,Result(Park(),s)) and At(c,Park,Result(Park(),s)) and Parked(c,Result(Park(y),s)).
+
+1.7)
+At(a,x,s) and At(c,x,s) and Agent(a) and Car(c) and NextTo(x,y) => Poss(Drive(c,y),s).r
+Poss(Drive(y),s) => At(a,y,Result(Drive(c,y),s)) and At(c,y,Result(Drive(c,y),s)).
+
+1.8)
+At(a,Pick,s) and At(c,Pick,s) and Agent(a) and Car(c) => Poss(Deliver(c),s).
+Poss(Deliver(),s) => At(a,Pick,Result(Deliver(),s)) and At(c,Pick,Result(Deliver(),s)) and Delivered(c,Result(Deliver(),s)).
+
+1.9)
+It solves the frame problem, where other effects of a action may not be fully represented,
+for example, when the agent moves a parked car, the car is no longer parked.
+
+1.10)
+Poss(a,s) =>
+   Parked(c,Result(a,s)) <=>
+   a = Park(c) and Car(c) or 
+   Parked(c,s) and (not(a = Drive(c,x)) and Car(c).
+Poss(a,s) =>
+   Delivered(c,Result(a,s)) <=>
+   a = Deliver(c) and Car(c) or 
+   Delivered(c,s).
+Poss(a,s) =>
+   At(what,where,Result(a,s)) <=>
+   a = Move(where) and Agent(what) or
+   a = Drive(car,where) and Agent(what) or
+   a = Drive(what,where) and Car(what) and not(Parked(what,s)) or
+   At(what,x,s) and not a = Move(y) and not a = Drive(what,y) and Agent(what) or 
+   At(what,x,s) and not a = Drive(what,y) and Car(what).
+
+
+1.11)
+The clauses used in refutation is marked with numbers.
+Initial State:
+12   Car(Car)
+13 & Agent(Agent)
+15 & At(Agent,Drop,S0)
+17 & At(Car,Drop,S0)
+14 & NextTo(Drop,Park)
+   & NextTo(Park,Drop)
+   & NextTo(Park,Pick)
+   & NextTo(Pick,Park).
+
+At(a,x,s) and NextTo(x,y) and Agent(a) => Poss(Move(y),s).
+  -> not At(a1,x1,s1) or not NextTo(x1,y1) or not Agent(ag1) or Poss(Move(y1),s1).
+
+At(a,Park,s) and At(c,Park,s) and Agent(a) and Car(c) => Poss(Park(c),s).
+4 -> not At(a2,Park,s2) or not At(c2,Park,s2) or not Agent(ag2) or not Car(c2) or Poss(Park(c2),s2).
+
+At(a,x,s) and At(c,x,s) and NextTo(x,y) and Agent(a) and Car(c) => Poss(Drive(c,y),s).
+10-> not At(a3,x3,s3) or not At(c3,x3,s3) or not NextTo(x3,y3) or not Agent(ag3) or not Car(c3) or Poss(Drive(y3),s3).
+
+At(a,Pick,s) and At(c,Pick,s) and Agent(a) and Car(c) => Poss(Deliver(c),s).
+  -> not At(a4,Pick,s4) or not At(c4,Pick,s4) or not Agent(a4) or not Car(c4) or Poss(Deliver(c4),s4).
+
+Poss(a,s) => Parked(c,Result(a,s)) <=> a = Park(c) and Car(c) or Parked(c,s) and (not(a = Drive(c,x)) and Car(c).
+  -> not Poss(a5,s5) or not Parked(c5,Result(a5,s5) or a5 = Park(c5) or Parked(c5,s5).
+   & not Poss(a5,s5) or not Parked(c5,Result(a5,s5) or a5 = Park(c5) or not a5 = Drive(c5,x5).
+   & not Poss(a5,s5) or not Parked(c5,Result(a5,s5) or Car(c5).
+2  & not Poss(a5,s5) or Parked(c5,Result(a5,s5) or not a5 = Park(c5) or not Car(c5).
+   & not Poss(a5,s5) or Parked(c5,Result(a5,s5) or not Parked(c5,s5) or a5 = Drive(c5,x5) or not Car(c5).
+
+Poss(a,s) => Delivered(c,Result(a,s)) <=> a = Deliver(c) and Car(c) or Delivered(c,s).
+  -> not Poss(a6,s6) or Delivered(Car,Result(a6,s6)) or not a6 = Deliver(c6) or not Car(c6).
+   & not Poss(a6,s6) or Delivered(Car,Result(a6,s6)) or not Delivered(c6,s6).
+   & not Poss(a6,s6) or not Delivered(Car,Result(a6,s6)) or a6 = Deliver(c6) or Delivered(c6,s6).
+   & not Poss(a6,s6) or not Delivered(Car,Result(a6,s6)) or Car(c6) or Delivered(c6,s6).
+
+Poss(a,s) => At(what,where,Result(a,s)) <=> a = Move(where) and Agent(what) ora = Drive(what,where) and Agent(what) or
+   a = Drive(what,where) and Car(what) and not(Parked(what,s)) or At(what,x,s) and not a = Move(y) and 
+   not a = Drive(what,y) and Agent(what) or At(what,x,s) and not a = Drive(what,y) and Car(what).
+
+  -> ~~~~~~(only the ones used are included)
+8  & not Poss(a7,s7) or At(ag7,x7,Result(a7,s7)) or not a7 = Drive(x7) or not Agent(ag7).
+6  & not Poss(a7,s7) or At(c7,x7,Result(a7,s7)) or not a7 = Drive(x7) or not Car(c7).
+   & ~~~~~~.
+
+not (exist s.Parked(Car,s))
+1 -> not Parked(Car,s)
+
+Start of the Proof:
+resolve 1 and 2, with s = Result(a5,s5):
+3 -> not Poss(a5,s5) or not a5 = Park(c5) or not Car(c5).
+resolve 3 and 4, with a5 = Park(), s2 = s5, c2=c5, and also resolve a5:
+5 -> not At(ag2,Park,s2) or not At(c2,Park,s2) or not Car(c2) or not Agent(ag2).
+resolve 5 and 6, with s2 = Result(a7,s7), c5 = c7,ag5 = ag7:
+7 -> not Poss(a7,s7) or not a7 = Drive(c7,x7) or not At(c2,Park,Result(a7,s7)) or not Car(c7) or not Agent(ag7).
+resolve 7 and 8:
+9 -> not Poss(a7,s7) or not a7 = Drive(c7,x7) or not Car(c7) or not Agent(ag7).
+resolve 9 and 10,with a7 = Drive(c7,y3) = Drive(c7,x7), s7 = s3, c7=c3,ag7=ag3,also resolve a7:
+11-> not At(ag3,x3,s3) or not At(c3,x3,s3) or not NextTo(x3,y3) or not Car(c3) or not Agent(ag3).
+resolve 11 and 12,then 13-15, with ag3 =Agent,c3=Car,x3 = Drop,y3=Park,s3=S0:
+16-> At(Car,Drop,S0).
+which contradicts with 17,and completes the proof
+with s = Result(a5,s5)
+       = Result(Park(c2),s2)
+       = Result(Park(Car),Result(a7,s7))
+       = Result(Park(Car),Result(Drive(Car,Park),S0))
+Makes a plan that first drive the car to the parking lot, then park it.
+
+--------------------
+Answers to parts 2 and 3 should be included in the appropriate domain-*.pl and instance-*.pl files.

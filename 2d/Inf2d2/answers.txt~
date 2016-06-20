@@ -1,0 +1,143 @@
+-----------------------------------------------------------------------
+ ------ Informatics 2D - 2015/16 - Second Assignment - Planning ------
+-----------------------------------------------------------------------
+ 
+ Write here you matriculation number (only - your name is not needed)
+ Matriculation Number: s1413557 
+1.1)
+NextTo(x,y).
+means x is a area next to area y,
+for example:
+NextTo(Drop,Park) and NextTo(Park,Drop).
+
+1.2)
+At(x,y,s).
+to represent x is at area y in situation s,
+for example:
+At(Car,Drop,s).
+
+1.3)
+Parked(x,s).
+Delivered(x,s).
+for example:
+At(Car,Park,s) and Parked(Car,s).
+
+1.4)
+At(Agent,Drop,s) and At(Car,Drop,s)
+ and NextTo(Drop,Park) and NextTo(Park,Drop)
+ and NextTo(Park,Pick) and NextTo(Pick,Park).
+
+1.5)
+At(Agent,x,s) and NextTo(x,y) => Poss(Move(y),s).
+Poss(Move(y),s) => At(Agent,y,Result(Move(y),s)).
+
+1.6)
+At(Agent,Park,s) and At(Car,Park,s) => Poss(Park(),s).
+Poss(Park(),s) => At(Agent,Park,Result(Park(),s)) and At(Car,Park,Result(Park(),s)) and Parked(Car,Result(Park(y),s)).
+
+1.7)
+At(Agent,x,s) and At(Car,x,s) and NextTo(x,y) => Poss(Drive(y),s).r
+Poss(Drive(y),s) => At(Agent,y,Result(Drive(y),s)) and At(Car,y,Result(Drive(y),s)).
+
+1.8)
+At(Agent,Pick,s) and At(Car,Pick,s) => Poss(Deliver(),s).
+Poss(Deliver(),s) => At(Agent,Pick,Result(Deliver(),s)) and At(Car,Pick,Result(Deliver(),s)) and Delivered(Car,Result(Deliver(),s)).
+
+1.9)
+It solves the frame problem, where other effects of a action may not be fully represented,
+for example, when the agent moves a parked car, the car is no longer parked.
+
+1.10)
+Poss(a,s) =>
+ ( Parked(Car,Result(a,s)) <=>
+   a = Park() or 
+   ( Parked(Car,s) and (not(a = Drive(x))))).
+Poss(a,s) =>
+ ( Delivered(Car,Result(a,s)) <=>
+   a = Deliver().
+Poss(a,s) =>
+ ( At(Agent,x,Result(a,s)) <=>
+   a = Move(x) or
+   a = Drive(x) or
+   At(Agent,x,s) and not a = Move(y) and not a = Drive(y) and not x = y.
+Poss(a,s) =>
+ ( At(Car,x,Result(a,s)) <=>
+   a = Drive(x) or
+   At(Car,x,s) and not a = Drive(y) and not x = y .
+
+
+1.11)
+The clauses used in refutation is marked with numbers.
+Initial State:
+14   At(Agent,Drop,S0)
+16 & At(Car,Drop,S0)
+12 & NextTo(Drop,Park)
+   & NextTo(Park,Drop)
+   & NextTo(Park,Pick)
+   & NextTo(Pick,Park).
+
+At(Agent,x,s) and NextTo(x,y) => Poss(Move(y),s).
+  -> not At(Agent,x1,s1) or not NextTo(x1,y1) or Poss(Move(y1),s1).
+
+At(Agent,Park,s) and At(Car,Park,s) => Poss(Park(),s).
+4 -> not At(Agent,Park,s2) or not At(Car,Park,s2) or Poss(Park(),s2).
+
+At(Agent,x,s) and At(Car,x,s) and NextTo(x,y) => Poss(Drive(y),s).
+10-> not At(Agent,x3,s3) or not At(Car,x3,s3) or not NextTo(x3,y3) or Poss(Drive(y3),s3).
+
+At(Agent,Pick,s) and At(Car,Pick,s) => Poss(Deliver(),s).
+  -> not At(Agent,Pick,s4) or not At(Car,Pick,s4) or Poss(Deliver(),s4).
+
+Poss(a,s) => (Parked(Car,Result(a,s)) <=> a = Park() or (Parked(Car,s) and (not(a = Drive(x))))).
+  -> not Poss(a5,s5) or not Parked(Car,Result(a5,s5) or a5 = Park() or Parked(Car,s).
+   & not Poss(a5,s5) or not Parked(Car,Result(a5,s5) or a5 = Park() or not a5 = Drive(x).
+2  & not Poss(a5,s5) or Parked(Car,Result(a5,s5) or not a5 = Park().
+   & not Poss(a5,s5) or Parked(Car,Result(a5,s5) or not Parked(Car,s) or a5 = Drive(x).
+
+Poss(a,s) => ( Delivered(Car,Result(a,s)) <=> a = Deliver().
+  -> not Poss(a6,s6) or Delivered(Car,Result(a6,s6)) or not a = Deliver().
+   & not Poss(a6,s6) or not Delivered(Car,Result(a6,s6)) or a = Deliver().
+
+Poss(a,s) => ( At(Agent,x,Result(a,s)) <=> a = Move(x) or a = Drive(x) or At(Agent,x,s) and not a = Move(y) and not a = Drive(y) and not x = y.
+  -> not Poss(a7,s7) or not At(Agent,x7,Result(a7,s7)) or a7 = Move(x7) or a7 = Drive(x7) or At(Agent,x7,s7).
+   & not Poss(a7,s7) or not At(Agent,x7,Result(a7,s7)) or a7 = Move(x7) or a7 = Drive(x7) or not a7 = Move(y7).
+   & not Poss(a7,s7) or not At(Agent,x7,Result(a7,s7)) or a7 = Move(x7) or a7 = Drive(x7) or not a7 = Drive(y7).
+   & not Poss(a7,s7) or not At(Agent,x7,Result(a7,s7)) or a7 = Move(x7) or a7 = Drive(x7) or not x7 = y7.
+   & not Poss(a7,s7) or At(Agent,x7,Result(a7,s7)) or not a7 = Move(x7).
+6  & not Poss(a7,s7) or At(Agent,x7,Result(a7,s7)) or not a7 = Drive(x7).
+   & not Poss(a7,s7) or At(Agent,x7,Result(a7,s7)) or not At(Agent,x7,s7) or a7 = Move(y7) or a7 = Drive(y7) or x7 = y7.
+
+Poss(a,s) => ( At(Car,x,Result(a,s)) <=> a = Drive(x) or At(Car,x,s) and not a = Drive(y) and not x = y .
+  -> not Poss(a8,s8) or not At(Car,x,Result(a8,s8)) or a8 = Drive(x8) or At(Car,x8,s8).
+   & not Poss(a8,s8) or not At(Car,x,Result(a8,s8)) or a8 = Drive(x8) or not a8 = Drive(y8).
+   & not Poss(a8,s8) or not At(Car,x,Result(a8,s8)) or a8 = Drive(x8) or not x8 = y8.
+8  & not Poss(a8,s8) or At(Car,x,Result(a8,s8)) or not a8 = Drive(x8).
+   & not Poss(a8,s8) or At(Car,x,Result(a8,s8)) or not At(Car,x8,s8) or a = Drive(y8) or x8 = y8.
+
+not (exist s.Parked(Car,s))
+1 -> not Parked(Car,s)
+
+Start of the Proof:
+resolve 1 and 2, with s = Result(a5,s5):
+3 -> not Poss(a5,s5) or not a5 = Park().
+resolve 3 and 4, with a5 = Park(), s2 = s5, and also resolve a5:
+5 -> not At(Agent,Park,s2) or not At(Car,Park,s2).
+resolve 5 and 6, with s2 = Result(a7,s7):
+7 -> not Poss(a7,s7) or not a7 = Drive(x7) or not At(Car,Park,s2).
+resolve 7 and 8, with s2 = Result(a8,s8), implying a7=a8,s7=s8:
+9 -> not Poss(a7,s7) or not a7 = Drive(x7).
+resolve 9 and 10,with a7 = Drive(y3) = Drive(x7), s7 = s3,also resolve a7:
+11-> not At(Agent,x3,s3) or not At(Car,x3,s3) or not NextTo(x3,y3).
+resolve 11 and 12,with x3 = Drop, y3=Pick:
+13-> not At(Agent,Drop,s3) or not At(Car,Drop,s3)
+resolve 13 and 14, with s3 = S0:
+15-> not At(Car,Drop,S0)
+which contradicts with 16, and completes the proof,
+with s = Result(a5,s5)
+       = Result(Park(),s2)
+       = Result(Park(),Result(a7,s7))
+       = Result(Park(),Result(Drive(Park),S0))
+Makes a plan that first drive the car to the parking lot, then park it.
+
+--------------------
+Answers to parts 2 and 3 should be included in the appropriate domain-*.pl and instance-*.pl files.
