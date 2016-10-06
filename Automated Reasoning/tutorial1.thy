@@ -8,8 +8,21 @@ apply (rule impI)
 apply (rule impI)
 apply assumption
 done
+thm mp
+lemma exercise4: "(R\<longrightarrow>P)\<longrightarrow>(((\<not>R\<or>P)\<longrightarrow>(Q\<longrightarrow>S))\<longrightarrow>(Q\<longrightarrow>S))" 
+apply (rule impI)
+apply (rule impI)
+apply (rule_tac P = "\<not> R \<or> P" in mp)
+apply assumption
+apply (rule_tac P = "\<not>R" and Q = "R" in disjE)
+apply (rule excluded_middle)
+apply (erule disjI1)
+apply (rule disjI2)
+apply (erule_tac P = "R" in mp)
+apply assumption
+done
 
-lemma exercise4: "(R\<longrightarrow>P)\<longrightarrow>(((\<not>R\<or>P)\<longrightarrow>(Q\<longrightarrow>S))\<longrightarrow>(Q\<longrightarrow>S))"
+lemma exercise42: "(R\<longrightarrow>P)\<longrightarrow>(((\<not>R\<or>P)\<longrightarrow>(Q\<longrightarrow>S))\<longrightarrow>(Q\<longrightarrow>S))"
 apply (rule impI)
 apply (rule impI)
 apply (rule impI)
