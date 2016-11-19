@@ -111,18 +111,11 @@ done
 (* Fill in the blanks in the following proof: *)
 lemma "\<not>(\<forall>P. (\<forall> y::int. \<exists>x::int. P x y) \<longrightarrow> (\<exists>x. \<forall>y. P x y))"
 proof simp (* This step is given. Don't erase this, and don't try writing before this line. *)
-    fix y :: 'int assume 1:"\<exists>P. (\<exists>x. P x y)"
-    obtain x where "\<exists>P. (P x y)" using 1 by auto
-    fix x :: 'int assume 2:"\<exists>P. (\<exists>x. P x y) \<and> (\<exists>xa. \<not> P x xa)"
-    obtain P where
-    fix x :: 'int assume 2:"\<exists>P. (\<exists>xa. \<not> P x xa)"
-    obtain x :: 'int where "\<exists>P. (P x y)" using 1 by auto
-    obtain P where "P x y" by auto
-
-    fix P :: "'int\<Rightarrow>'int\<Rightarrow>bool"
-oops
-
-
+  obtain P where 1:"\<forall> y::int. \<forall>x::int. P x y \<longleftrightarrow> x = y" by auto
+  hence 2:"(\<forall>y. \<exists>x. P x y) \<and> (\<forall>x. \<exists>xa. \<not> P x xa)" by presburger
+  thus "\<exists>P. (\<forall>y::int. \<exists>x::int. P x y) \<and>
+        (\<forall>x. \<exists>xa::int. \<not> P x xa)" by blast
+qed
 definition "R12 (x::int) y \<equiv> 12 dvd (x-y)"
 
 (*  ---------------------------  *)
@@ -233,14 +226,8 @@ proof (induction m)
     moreover have "\<dots> = n^(m + 1) + (n - 1)* n^(m + 1)- 1 " by (simp add: Suc.prems Suc_leI)
     moreover have "\<dots> = (n - 1 + 1)*n^(m + 1) - 1" by simp
     moreover have "\<dots> = n^(m + 2) - 1" by (simp add: Suc.prems)
-    ultimately have "\<dots> = n^((Suc m) + 1) - 1" by simp
-    thus "power_sum n (Suc m) = n^((Suc m)+1) - 1" 
-      using \<open>(n - 1 + 1) * n ^ (m + 1) - 1 = n ^ (m + 2) - 1\<close> 
-            \<open>n ^ (m + 1) + (n - 1) * n ^ (m + 1) - 1 = (n - 1 + 1) * n ^ (m + 1) - 1\<close>
-            \<open>n ^ (m + 1) - 1 + (n - 1) * n ^ (m + 1) = n ^ (m + 1) + (n - 1) * n ^ (m + 1) - 1\<close> 
-            \<open>power_sum n (Suc m) = power_sum n m + (n - 1) * n ^ Suc m\<close> 
-            \<open>power_sum n m + (n - 1) * n ^ Suc m = n ^ (m + 1) - 1 + (n - 1) * n ^ (m + 1)\<close>
-      by linarith
+    moreover have "\<dots> = n^((Suc m) + 1) - 1" by simp
+    ultimately show "power_sum n (Suc m) = n^((Suc m)+1) - 1" by presburger
 qed
 
 
@@ -286,8 +273,8 @@ locale Simple_Geometry =
   assumes A1: "plane \<noteq> {}"
       and A2: "\<forall>l \<in> lines. l \<subseteq> plane \<and> l \<noteq> {}"
       and A3: "\<forall>p \<in> plane. \<forall>q \<in> plane. \<exists>l \<in> lines. {p,q} \<subseteq> l"
-      and A4: "\<forall>l1 \<in> lines. \<forall>l2 \<in> lines. \<forall>p1 p2. 
-               (l1 \<noteq> l2 \<and> p1 \<in> l1 \<and> p1 \<in> l2 \<and> p2 \<in> l1 \<and> p2 \<in> l2) \<longrightarrow>( p1 = p2)"
+      and A4: "\<forall>l1 \<in> lines. \<forall>l2 \<in> lines. 
+               (l1 \<noteq> l2 \<and> p1 \<in> l1 \<and> p1 \<in> l2 \<and> p2 \<in> l1 \<and> p2 \<in> l2  \<longrightarrow> p1 = p2)"
       and A5: "\<forall>l \<in> lines. \<exists>p \<in> plane. p \<notin> l "
 
 (*  ---------------------------  *)
@@ -358,24 +345,10 @@ definition "lines_3 \<equiv> {{1::int,2::int},{1::int,3::int},{2::int,3::int}}"
 interpretation Simple_Geometry_smallest_model: 
   Simple_Geometry plane_3 lines_3
 apply standard
-proof
-  show "plane_3 = {} \<Longrightarrow> False" by (simp add: plane_3_def)
-  show "\<forall>l\<in>lines_3. l \<subseteq> plane_3 \<and> l \<noteq> {}" by (simp add: plane_3_def lines_3_def)
-  show "\<forall>p\<in>plane_3. \<forall>q\<in>plane_3. \<exists>l\<in>lines_3. {p, q} \<subseteq> l"
-        by (simp add: plane_3_def lines_3_def)
-  show "\<forall>l1\<in>lines_3.
-        \<forall>l2\<in>lines_3.
-        \<forall>p1 p2. l1 \<noteq> l2 \<and> p1 \<in> l1 \<and> p1 \<in> l2 \<and> p2 \<in> l1 \<and> p2 \<in> l2 \<longrightarrow> p1 = p2"
-        by sledgehammer
-  oops
-      
-
-
-(*
-lemma (in Simple_Geometry) "False"
-proof -
-  show ?thesis by sledgehamme
-*)
+unfolding plane_3_def lines_3_def
+apply simp+
+apply auto
+done
 
 (*  ----------------------------  *)
 (* |   Problem 20 (5 marks):   | *)
@@ -389,8 +362,13 @@ assumes
     "n \<in> lines" "{a, p} \<subseteq> n" 
     "m \<in> lines" "{b, p} \<subseteq> m"
 shows "m \<noteq> n"
-  oops
-
+proof (rule ccontr)
+  assume 1:"\<not> m \<noteq> n"
+  from 1 assms have "a \<in> m \<and> b \<in> m \<and> a \<noteq> b \<and> a \<in> l \<and> b \<in> l" by auto
+  hence "m = l" using A4 assms(1) assms(7) by blast
+  hence "p \<in> l" using assms by auto
+  thus "False"  using assms(4) by auto
+qed
 
 (*  ----------------------------  *)
 (* |   Problem 21 (4 marks):   | *)
@@ -405,8 +383,12 @@ assumes
     "m \<in> lines" "{b, p, d} \<subseteq> m"
     "p \<noteq> c"
 shows "c \<noteq> d" 
-  oops
-
+proof -
+  have "m \<noteq> n" using assms how_to_produce_different_lines by auto
+  hence "m \<noteq> n \<and> d \<in> m \<and> c \<in> n \<and> p \<in> m \<and>  p \<in> n" using assms insert_subset by auto
+  hence " d \<in> m \<and> c \<notin> m" using A4 assms by blast
+  thus ?thesis by auto
+qed
 
 (*  ---------------------------  *)
 (* |   Problem 22 (1 point):   | *)
@@ -418,17 +400,24 @@ shows "c \<noteq> d"
    which does not intersect l *)
 locale Non_Projective_Geometry = 
   Simple_Geometry +
-  assumes parallels_Ex: (*  FILL THIS SPACE  *)
-  
+  assumes parallels_Ex: "\<forall> l1 \<in> lines.  \<forall>p1 \<in>plane.
+    p1 \<notin> l1 \<longrightarrow> (\<exists>l2 \<in> lines. p1 \<in> l2 \<and> ( \<forall>p2 \<in> l1 . p2 \<notin> l2))"
 
 (*  ----------------------------  *)
 (* |   Problem 23 (2 marks):   | *)
 (*  ----------------------------  *)
 (* Give a model of Non-Projective Geometry with cardinality 4. 
    Show that it is indeed a model using the command "interpretation" *)
-
- (*  FILL THIS SPACE  *)
-
+definition "plane_4 \<equiv> {1::int,2::int,3::int,4::int}"
+definition "lines_4 \<equiv> {{1,2},{2,3},{3,4},{4,1},{1,3},{4,2}}"
+interpretation Non_Projective_Geometry_smallest_model: 
+  Non_Projective_Geometry plane_4 lines_4
+apply standard 
+unfolding plane_4_def lines_4_def
+apply simp+
+apply linarith
+apply simp+
+done
 
 (*  ----------------------------  *)
 (* |   Problem 24 (3 marks):   | *)
@@ -436,8 +425,24 @@ locale Non_Projective_Geometry =
 (*  Formalise and prove: 
      "it is not true that every pair of lines intersect"  *)
 lemma (in Non_Projective_Geometry) non_projective: 
-   (*  fill this space *)
-   oops
+  "\<exists>l1 \<in> lines. \<exists>l2 \<in> lines. \<forall> p \<in> l1. p \<notin> l2"
+proof -
+  obtain p1 p2 where 1:"p1 \<noteq> p2 \<and> {p1,p2} \<subseteq> plane" 
+         using two_points_exist by auto
+  then obtain l1 where "p1 \<noteq> p2 \<and> {p1,p2} \<subseteq> l1 \<and> {p1,p2} \<subseteq> plane \<and> {l1} \<subseteq> lines"
+         using A3 by auto
+  then obtain p3 where "distinct[p1,p2] \<and> {p1,p2} \<subseteq> l1 \<and> 
+         {p1,p2,p3} \<subseteq> plane \<and> {l1} \<subseteq> lines \<and> p3 \<notin> l1"
+         using A5 by auto
+  hence 1:"distinct[p1,p2,p3] \<and> p1 \<in> plane \<and> p2 \<in> plane \<and> p3 \<in> plane \<and> l1 \<in> lines \<and> 
+         {p1,p2} \<subseteq> l1 \<and> p3 \<notin> l1 "
+         by auto
+  hence 2:"\<exists>l2 \<in> lines. p3 \<in> l2 \<and> ( \<forall>p \<in> l1 . p \<notin> l2)"
+         using parallels_Ex by meson
+  hence "\<exists>l2. l1 \<in> lines \<and> l2 \<in> lines \<and> p3 \<in> l2 \<and>( \<forall>p \<in> l1 . p \<notin> l2)" 
+         using 1 2 by auto
+  thus ?thesis by blast
+qed
 
 (* The following are some auxiliary lemmas that may be useful.
    You don't need to use them if you don't want. *)
@@ -471,8 +476,16 @@ locale Projective_Geometry =
 (*   Prove this alternative to axiom A7   *)
 lemma (in Projective_Geometry) A7': 
   "\<forall>l \<in> lines. \<exists>p1 p2 p3. {p1,p2,p3} \<subseteq> plane \<and> distinct [p1,p2,p3] \<and> {p1,p2,p3} \<subseteq> l" 
-  oops
-
+proof -
+  have "\<forall>l \<in> lines. \<exists>x. card x = 3 \<and> x \<subseteq> l" using A7 by auto
+  hence "\<forall>l \<in> lines. \<exists>x. \<exists> p1 p2 p3. distinct [p1,p2,p3] \<and> x = {p1,p2,p3} \<and> x \<subseteq> l"
+        using construct_set_of_card3 by metis
+  hence "\<forall>l \<in> lines. \<exists>p1 p2 p3. distinct [p1,p2,p3] \<and> {p1,p2,p3} \<subseteq> l"
+        by metis
+  hence "\<forall>l \<in> lines. \<exists>p1 p2 p3. distinct [p1,p2,p3] \<and> {p1,p2,p3} \<subseteq> l \<and> {p1,p2,p3} \<subseteq> plane"
+        using A2 by fast
+  thus ?thesis by fast
+qed
 
 (*  ----------------------------  *)
 (* |   Problem 26 (3 marks):   | *)
@@ -480,15 +493,42 @@ lemma (in Projective_Geometry) A7':
 (* Prove yet another alternative to axiom A7  *)
 lemma (in Projective_Geometry) A7'': 
   "l \<in> lines \<Longrightarrow> {p,q} \<subseteq> l  \<Longrightarrow> (\<exists>r \<in> plane. r \<notin> {p,q} \<and> r \<in> l)"
-  oops
-
+proof simp
+  assume 1:"l \<in> lines" "p \<in> l \<and> q \<in> l"
+  show "\<exists>r\<in>plane. r \<noteq> p \<and> r \<noteq> q \<and> r \<in> l"
+  proof -
+    obtain p q r where 2:"l \<in> lines \<and> 
+         {p,q,r} \<subseteq> plane \<and> distinct [p,q,r] \<and> {p,q,r} \<subseteq> l"
+         using A7' 1 by auto
+    hence 3:"p \<in> l \<and> q \<in> l \<and> r \<in> l" by blast
+    have "r \<noteq> p \<and> r \<noteq> q" using 2 by auto
+    hence "r\<in>plane \<and> r \<noteq> p \<and> r \<noteq> q \<and> r \<in> l" using 2 3 by auto
+    thus ?thesis using 2 by (metis distinct.simps(2) insertI1 insert_subset list.simps(15))
+  qed
+qed
 
 (*  ----------------------------  *)
 (* |   Problem 27 (5 marks):   | *)
 (*  ----------------------------  *)
 lemma (in Projective_Geometry) two_lines_per_point:
-  "\<forall>p \<in> plane. \<exists>l \<in> lines. \<exists>m \<in> lines. l \<noteq> m \<and> p \<in> l \<inter> m" 
-  oops
+  "\<forall>p \<in> plane. \<exists>l \<in> lines. \<exists>m \<in> lines. l \<noteq> m \<and> p \<in> l \<inter> m"   
+proof - 
+  have "\<forall>p \<in> plane . \<exists>l1 \<in> lines. p \<in> l1" using A3 by (meson insert_subset)
+  hence "\<forall>p \<in> plane. \<exists>p2 \<in> plane. \<exists>l1 \<in> lines. p \<in> l1 \<and> p2 \<notin> l1"
+        using A5 by meson
+  hence "\<forall>p \<in> plane. \<exists>p2 \<in> plane. \<exists>l1 \<in> lines. \<exists>l2 \<in> lines. 
+        p \<in> l1 \<and> p2 \<notin> l1 \<and> {p,p2} \<subseteq> l2"
+        using A3 by auto
+  hence "\<forall>p \<in> plane. \<exists>p2 \<in> plane. \<exists>l1 \<in> lines. \<exists>l2 \<in> lines. 
+        p \<in> l1 \<and> p2 \<notin> l1 \<and> {p,p2} \<subseteq> l2 \<and> p \<in> l2 \<and> p2 \<in> l2" by fastforce
+  hence "\<forall>p \<in> plane.  \<exists>l1 \<in> lines. \<exists>l2 \<in> lines. 
+        p \<in> l1 \<and>  p \<in> l2 \<and>
+        l1 \<noteq> l2" by metis
+  hence "\<forall>p \<in> plane. \<exists>l1 \<in> lines. \<exists>l2 \<in> lines. 
+        p \<in> l1 \<and>  p \<in> l2 \<and>
+        l1 \<noteq> l2 \<and>  p \<in> l1 \<inter> l2 " by blast
+  thus ?thesis by meson
+qed
 
 
 (*  ----------------------------  *)
@@ -496,32 +536,223 @@ lemma (in Projective_Geometry) two_lines_per_point:
 (*  ----------------------------  *)
 lemma (in Projective_Geometry) external_line: 
   "\<forall>p \<in> plane. \<exists>l \<in> lines. p \<notin> l" 
-  oops
-  
+proof standard
+  fix p assume pp:"p \<in> plane"
+  show "\<exists>l\<in>lines. p \<notin> l"
+  proof -
+    obtain l where ll:"l \<in> lines" and pl:"p \<in> l" using A3 pp by blast
+    obtain p2 where p2p:"p2 \<in> plane" and p2nl:"p2 \<notin> l" using A5 ll by blast
+    obtain l1 where l1l:"l1 \<in> lines" and l1:"{p,p2} \<subseteq> l1" using pp p2p A3 by auto
+    obtain p3 where p3p:"p3 \<in> plane" and p3nl1:"p3 \<notin> l1" using A5 l1l by blast
+    obtain l2 where l2l:"l2 \<in> lines" and l2:"{p2,p3} \<subseteq> l2" using p2p p3p A3 by auto
+    have l1nl2:"l1 \<noteq> l2" using p3nl1 l2 by fast
+    have pnp2:"p \<noteq> p2" using pl p2nl by fast
+    have pnl2:"p \<notin> l2"
+    proof (rule ccontr,simp)
+      assume "p \<in> l2"
+      hence "p = p2" using A4 l1l l2l l1nl2 l1 l2 by blast
+      thus "False" using pnp2 by auto
+    qed
+    thus ?thesis using l2l pnl2 by auto
+  qed
+qed
 
 (*  ----------------------------  *)
 (* |   Problem 29 (6 marks):   | *)
 (*  ----------------------------  *)
 lemma (in Projective_Geometry) three_lines_per_point:
   "\<forall>p \<in> plane. \<exists>l m n. distinct [l,m,n] \<and> {l,m,n} \<subseteq> lines \<and> p \<in> l \<inter> m \<inter> n" 
-  oops
-
+proof standard
+  fix p assume pp:"p \<in> plane"
+  show "\<exists>l m n. distinct [l, m, n] \<and> {l, m, n} \<subseteq> lines \<and> p \<in> l \<inter> m \<inter> n"
+  proof -
+    obtain a where al:"a \<in> lines" and pna:"p \<notin> a" using external_line pp by blast
+    obtain p1 p2 p3 where p1p:"p1 \<in> plane" and p2p:"p2 \<in> plane" and p3p:"p3 \<in> plane" and
+      dp:"distinct[p1,p2,p3]" and a:"{p1,p2,p3} \<subseteq> a" using A7' al by auto
+    obtain l m n where ll:"l \<in> lines" and ml:"m \<in> lines" and nl:"n \<in> lines" and 
+      l:"{p,p1} \<subseteq> l" and m:"{p,p2} \<subseteq> m" and n:"{p,p3} \<subseteq> n" using A3 pp p1p p2p p3p by metis
+    have anl:"a \<noteq> l" and ann:"a \<noteq> n" and anm:"a \<noteq> m" using pna a l n m by auto
+    from a have p1a:"p1 \<in> a" and p2a:"p2 \<in> a" and p3a:"p3 \<in> a" by auto
+    have lnm:"l \<noteq> m"
+    proof (rule ccontr, simp)
+      assume lm:"l = m"
+      have npl:"{p,p1,p2} \<subseteq> l" using l m lm by simp
+      hence p1p2:"p1 = p2" using A4 anl p1a p2a al lm ml by blast
+      thus "False" using dp by auto
+    qed
+    have mnn:"m \<noteq> n"
+    proof (rule ccontr, simp)
+      assume mn:"m = n"
+      have npm:"{p,p2,p3} \<subseteq> m" using m n mn by simp
+      hence p2p3:"p2 = p3" using A4 anm p2a p3a al mn nl by blast
+      thus "False" using dp by auto
+    qed
+    have nnl:"n \<noteq> l"
+    proof (rule ccontr, simp)
+      assume nl:"n = l"
+      have npn:"{p,p1,p3} \<subseteq> n" using l n nl by simp
+      hence p1p3:"p1 = p3" using A4 ann p1a p3a al nl ll by blast
+      thus "False" using dp by auto
+    qed
+    have dl:"distinct[l,m,n]" using lnm mnn nnl by auto
+    thus ?thesis using dl ll ml nl l m n by auto
+  qed
+qed
 
 (*  -----------------------------  *)
 (* |   Problem 30 (8 marks):   | *)
 (*  -----------------------------  *)
 lemma (in Projective_Geometry) at_least_seven_points: 
   "\<exists>p1 p2 p3 p4 p5 p6 p7. distinct [p1,p2,p3,p4,p5,p6,p7] \<and> {p1,p2,p3,p4,p5,p6,p7} \<subseteq> plane" 
-  oops
-
+proof - 
+  obtain l where ll:"l \<in> lines" using one_line_exists by auto
+  obtain p7 where p7p:"p7 \<in> plane" and p7nl:"p7 \<notin> l" using A5 ll by auto
+  obtain p1 p2 p3 where p1p:"p1 \<in> plane" and p2p:"p2 \<in> plane" and p3p:"p3 \<in> plane" and 
+    dp1:"distinct [p1,p2,p3]" and l:"{p1,p2,p3} \<subseteq> l" using A7' ll by auto
+  obtain l1 l2 l3 where l1l:"l1 \<in> lines" and l2l:"l2 \<in> lines" and  l3l:"l3 \<in> lines" and
+    l1:"{p7,p1} \<subseteq> l1" and l2:"{p7,p2} \<subseteq> l2" and l3:"{p7,p3} \<subseteq> l3" using A3 p1p p2p p3p p7p by metis
+  have dp2:"distinct[p1,p2,p3,p7]" using dp1 p7nl l by fastforce
+  have lnl1:"l \<noteq> l1" and  lnl2:"l \<noteq> l2" and  lnl3:"l \<noteq> l3" using p7nl l1 l2 l3 l by auto
+  have l1nl2:"l1 \<noteq> l2"
+  proof (rule ccontr, simp)
+    assume "l1 = l2"
+    hence "{p1,p2,p7} \<subseteq> l1" using l1 l2 by simp
+    hence "p1 = p2" using A4 lnl1 p1p p2p l1l l ll by force
+    thus "False" using dp2 by auto
+  qed
+  have l2nl3:"l2 \<noteq> l3"
+  proof (rule ccontr, simp)
+    assume "l2 = l3"
+    hence "{p2,p3,p7} \<subseteq> l2" using l2 l3 by simp
+    hence "p2 = p3" using A4 lnl2 p2p p3p l2l l ll by force
+    thus "False" using dp2 by auto
+  qed
+  have l1nl3:"l1 \<noteq> l3"
+  proof (rule ccontr, simp)
+    assume "l1 = l3"
+    hence "{p1,p3,p7} \<subseteq> l1" using l1 l3 by simp
+    hence "p1 = p3" using A4 lnl1 p1p p3p l1l l ll by force
+    thus "False" using dp2 by auto
+  qed
+  have dl:"distinct[l1,l2,l3]" using l1nl2 l2nl3 l1nl3 by auto
+  obtain p4 where p4p:"p4 \<in> plane" and p4n:"p4 \<notin> {p1,p7}" and p4l1:"p4 \<in> l1"
+    using l1 l1l p1p p7p A7'' by force
+  obtain p5 where p5p:"p5 \<in> plane" and p5n:"p5 \<notin> {p2,p7}" and p5l2:"p5 \<in> l2"
+    using l2 l2l p2p p7p A7'' by force
+  obtain p6 where p6p:"p6 \<in> plane" and p6n:"p6 \<notin> {p3,p7}" and p6l3:"p6 \<in> l3"
+    using l3 l3l p1p p7p A7'' by force
+  have dp3:"distinct[p1,p4,p7]" "distinct[p2,p5,p7]" "distinct[p3,p6,p7]" using dp2 p4n p5n p6n by auto
+  have p1np5:"p1\<noteq>p5"
+  proof (rule ccontr, simp)
+    assume "p1 = p5"
+    hence "{p1,p5,p7} \<subseteq> l1" "{p1,p5,p7} \<subseteq> l2" using l1 l2 p5l2 by auto
+    hence "p5 = p7" using A4 l1nl2 l1l l2l by force
+    thus "False" using dp3 by auto
+  qed
+  moreover have p1np6:"p1\<noteq>p6"
+  proof (rule ccontr, simp)
+    assume "p1 = p6"
+    hence "{p1,p6,p7} \<subseteq> l1" "{p1,p6,p7} \<subseteq> l3" using l1 l3 p6l3 by auto
+    hence "p6 = p7" using A4 l1nl3 l1l l3l by force
+    thus "False" using dp3 by auto
+  qed
+  moreover have p2np4:"p2\<noteq>p4"
+  proof (rule ccontr, simp)
+    assume "p2 = p4"
+    hence "{p2,p4,p7} \<subseteq> l1" "{p2,p4,p7} \<subseteq> l2" using l1 l2 p4l1 by auto
+    hence "p4 = p7" using A4 l1nl2 l1l l2l by force
+    thus "False" using dp3 by auto
+  qed
+  moreover have p2np6:"p2\<noteq>p6"
+  proof (rule ccontr, simp)
+    assume "p2 = p6"
+    hence "{p2,p6,p7} \<subseteq> l2" "{p2,p6,p7} \<subseteq> l3" using l2 l3 p6l3 by auto
+    hence "p6 = p7" using A4 l2nl3 l2l l3l by force
+    thus "False" using dp3 by auto
+  qed
+  moreover have p3np4:"p3\<noteq>p4"
+  proof (rule ccontr, simp)
+    assume "p3 = p4"
+    hence "{p3,p4,p7} \<subseteq> l1" "{p3,p4,p7} \<subseteq> l3" using l1 l3 p4l1 by auto
+    hence "p4 = p7" using A4 l1nl3 l1l l3l by force
+    thus "False" using dp3 by auto
+  qed
+  moreover have p3np5:"p3\<noteq>p5"
+  proof (rule ccontr, simp)
+    assume "p3 = p5"
+    hence "{p3,p5,p7} \<subseteq> l2" "{p3,p5,p7} \<subseteq> l3" using l2 l3 p5l2 by auto
+    hence "p5 = p7" using A4 l2nl3 l3l l2l by force
+    thus "False" using dp3 by auto
+  qed
+  moreover have p4np5:"p4\<noteq>p5"
+  proof (rule ccontr, simp)
+    assume "p4 = p5"
+    hence "{p4,p5,p7} \<subseteq> l1" "{p4,p5,p7} \<subseteq> l2" using l1 l2 p4l1 p5l2 by auto
+    hence "p5 = p7" using A4 l1nl2 l1l l2l by force
+    thus "False" using dp3 by auto
+  qed
+  moreover have p4np6:"p4\<noteq>p6"
+  proof (rule ccontr, simp)
+    assume "p4 = p6"
+    hence "{p4,p6,p7} \<subseteq> l1" "{p4,p6,p7} \<subseteq> l3" using l1 l3 p4l1 p6l3 by auto
+    hence "p6 = p7" using A4 l1nl3 l1l l3l by force
+    thus "False" using dp3 by auto
+  qed
+  moreover have p5np6:"p5\<noteq>p6"
+  proof (rule ccontr, simp)
+    assume "p5 = p6"
+    hence "{p5,p6,p7} \<subseteq> l2" "{p6,p5,p7} \<subseteq> l3" using l3 l2 p6l3 p5l2 by auto
+    hence "p5 = p7" using A4 l2nl3 l3l l2l by force
+    thus "False" using dp3 by auto
+  qed
+  ultimately have dpf:"distinct[p1,p2,p3,p4,p5,p6,p7]" using dp2 dp3 by simp
+  have allp:"{p1,p2,p3,p4,p5,p6,p7} \<subseteq> plane" using p1p p2p p3p p4p p5p p6p p7p by blast
+  show ?thesis using dpf allp by blast
+qed
   
 (*  -----------------------------  *)
 (* |   Problem 31 (3 marks):    | *)
 (*  -----------------------------  *)
 (*  Give a model of Projective Geometry with 7 points; use the 
     command "interpretation" to prove that it is indeed a model. *)
-
- (*  FILL THIS BLANK *)
-
+definition "plane_7 \<equiv> {1::int,2::int,3::int,4::int,5::int,6::int,7::int}"
+definition "lines_7 \<equiv> {{1::int,2::int,4::int},
+                       {1::int,3::int,5::int},
+                       {2::int,3::int,6::int},
+                       {4::int,5::int,6::int},
+                       {1::int,6::int,7::int},
+                       {2::int,5::int,7::int},
+                       {3::int,4::int,7::int}}"
+interpretation Projective_Geometry_smallest_model: 
+  Projective_Geometry plane_7 lines_7
+apply standard
+unfolding plane_7_def lines_7_def
+apply simp+
+apply linarith (*this takes a while*)
+apply simp
+apply simp
+apply auto
+proof -
+  obtain x where 1:"x = {1::int,2::int,4::int}" "x \<subseteq> {1::int,2::int,4::int}" "card x = 3" by simp
+  then show "\<exists>x. card x = 3 \<and> x \<subseteq> {1::int, 2::int, 4::int}" by blast
+next
+  obtain x where 1:"x = {1::int,3::int,5::int}" "x \<subseteq> {1::int,3::int,5::int}" "card x = 3" by simp
+  then show "\<exists>x. card x = 3 \<and> x \<subseteq> {1::int,3::int,5::int}" by blast
+next
+  obtain x where 1:"x = {2::int,3::int,6::int}" "x \<subseteq> {2::int,3::int,6::int}" "card x = 3" by simp
+  then show "\<exists>x. card x = 3 \<and> x \<subseteq> {2::int,3::int,6::int}" by blast
+next
+  obtain x where 1:"x = {4::int,5::int,6::int}" "x \<subseteq> {4::int,5::int,6::int}" "card x = 3" by simp
+  then show "\<exists>x. card x = 3 \<and> x \<subseteq> {4::int,5::int,6::int}" by blast
+next
+  obtain x where 1:"x = {1::int,6::int,7::int}" "x \<subseteq> {1::int,6::int,7::int}" "card x = 3" by simp
+  then show "\<exists>x. card x = 3 \<and> x \<subseteq> {1::int,6::int,7::int}" by blast
+next
+  obtain x where 1:"x = {2::int,5::int,7::int}" "x \<subseteq> {2::int,5::int,7::int}" "card x = 3" by simp
+  then show "\<exists>x. card x = 3 \<and> x \<subseteq> {2::int,5::int,7::int}" by blast
+next
+  obtain x where 1:"x = {3::int,4::int,7::int}" "x \<subseteq> {3::int,4::int,7::int}" "card x = 3" by simp
+  then show "\<exists>x. card x = 3 \<and> x \<subseteq> {3::int,4::int,7::int}" by blast
+qed
 
 end
