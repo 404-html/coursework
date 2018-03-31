@@ -1,0 +1,171 @@
+-- Informatics 1 - Functional Programming 
+-- Tutorial 4
+--
+-- Due: the tutorial of week 6 (23/24 Oct)
+
+import Data.List (nub)
+import Data.Char
+import Test.QuickCheck
+import Network.HTTP (simpleHTTP,getRequest,getResponseBody)
+
+-- <type decls>
+
+type Link = String
+type Name = String
+type Email = String
+type HTML = String
+type URL = String
+
+-- </type decls>
+-- <sample data>
+
+testURL     = "http://www.inf.ed.ac.uk/teaching/courses/inf1/fp/testpage.html"
+
+testHTML :: String
+testHTML =    "<html>"
+           ++ "<head>"
+           ++ "<title>FP: Tutorial 4</title>"
+           ++ "</head>"
+           ++ "<body>"
+           ++ "<h1>A Boring test page</h1>"
+           ++ "<h2>for tutorial 4</h2>"
+           ++ "<a href=\"http://www.inf.ed.ac.uk/teaching/courses/inf1/fp/\">FP Website</a><br>"
+           ++ "<b>Lecturer:</b> <a href=\"mailto:dts@inf.ed.ac.uk\">Don Sannella</a><br>"
+           ++ "<b>TA:</b> <a href=\"mailto:m.k.lehtinen@sms.ed.ac.uk\">Karoliina Lehtinen</a>"
+           ++ "</body>"
+           ++ "</html>"
+
+testLinks :: [Link]
+testLinks = [ "http://www.inf.ed.ac.uk/teaching/courses/inf1/fp/\">FP Website</a><br><b>Lecturer:</b> "
+            , "mailto:dts@inf.ed.ac.uk\">Don Sannella</a><br><b>TA:</b> "
+            , "mailto:m.k.lehtinen@sms.ed.ac.uk\">Karoliina Lehtinen</a></body></html>" ]
+
+
+testAddrBook :: [(Name,Email)]
+testAddrBook = [ ("Don Sannella","dts@inf.ed.ac.uk")
+               , ("Karoliina Lehtinen","m.k.lehtinen@sms.ed.ac.uk")]
+
+-- </sample data>
+-- <system interaction>
+
+getURL :: String -> IO String
+getURL url = simpleHTTP (getRequest url) >>= getResponseBody
+
+emailsFromURL :: URL -> IO ()
+emailsFromURL url =
+  do html <- getURL url
+     let emails = (emailsFromHTML html)
+     putStr (ppAddrBook emails)
+
+emailsByNameFromURL :: URL -> Name -> IO ()
+emailsByNameFromURL url name =
+  do html <- getURL url
+     let emails = (emailsByNameFromHTML html name)
+     putStr (ppAddrBook emails)
+
+-- </system interaction>
+-- <exercises>
+
+-- 1.
+sameString :: String -> String -> Bool
+sameString xs ys = (map toUpper xs) == (map toUpper ys)
+
+
+-- 2.
+prefix :: String -> String -> Bool
+prefix xs ys = (map toUpper xs)== (take (length xs) (map toUpper ys))
+
+prop_prefix :: String -> Int -> Bool
+prop_prefix str n  =  prefix substr (map toLower str) &&
+		      prefix substr (map toUpper str)
+                          where
+                            substr  =  take n str
+
+
+-- 3.
+contains :: String -> String -> Bool
+contains _ [] = True
+contains [] _ = False
+contains xs ys = prefix ys xs || contains (tail xs) ys
+
+prop_contains :: String -> Int -> Int -> Bool
+prop_contains str x y = contains (map toLower str) substr &&
+		        contains (map toUpper str) substr
+                          where
+                            substr  =  take y (drop x str)
+
+-- 4.
+takeUntil :: String -> String -> String
+takeUntil substr str = take (number substr str) str
+ where
+  number [] _ = 0
+  number _ [] = 0
+  number substr str |prefix substr str == True = 0
+                    |otherwise = 1 + (number substr (tail str))
+
+dropUntil :: String -> String -> String
+dropUntil substr str = drop (number substr str) str
+ where
+  number [] _ = 0
+  number _ [] = 0
+  number substr str |prefix substr str == True = length substr
+                    |otherwise = 1 + (number substr (tail str))
+
+
+-- 5.
+split :: String -> String -> [String]
+split [] str = error "dafaq"
+split _ [] = []
+split substr str = takeUntil substr str : split substr (dropUntil substr str)
+
+reconstruct :: String -> [String] -> String
+reconstruct _ [] = []
+reconstruct substr str = foldr addSub (last str) (init str)
+ where
+  addSub xs ys = xs ++ substr ++ ys
+
+prop_split :: Char -> String -> String -> Bool
+prop_split c sep str = reconstruct sep' (split sep' str) `sameString` str
+  where sep' = c : sep
+
+-- 6.
+linksFromHTML :: HTML -> [Link]
+linksFromHTML xs = tail (split "<a href=\"" xs)
+
+testLinksFromHTML :: Bool
+testLinksFromHTML  =  linksFromHTML testHTML == testLinks
+
+
+-- 7. 
+takeEmails :: [Link] -> [Link]
+takeEmails xs = filter (\x -> prefix "mailto" x) xs
+
+
+-- 8.
+link2pair :: Link -> (Name, Email)
+link2pair xs = head (zip [dropUntil "\">" (takeUntil "</a>" xs)] [dropUntil "mailto:" (takeUntil "\">" xs)])
+
+
+-- 9.
+emailsFromHTML :: HTML -> [(Name,Email)]
+emailsFromHTML xs = map link2pair (takeEmails (linksFromHTML xs))
+
+testEmailsFromHTML :: Bool
+testEmailsFromHTML  =  emailsFromHTML testHTML == testAddrBook
+
+
+-- 10.
+findEmail :: Name -> [(Name, Email)] -> [(Name, Email)]
+findEmail xs ys = [(x,y)|(x,y)<- ys , contains x xs]
+
+
+-- 11.
+emailsByNameFromHTML :: HTML -> Name -> [(Name,Email)]
+emailsByNameFromHTML xs ys = findEmail ys (emailsFromHTML xs)
+
+
+-- Optional Material
+
+-- 12.
+ppAddrBook :: [(Name, Email)] -> String
+ppAddrBook addr = unlines [ name ++ ": " ++ email | (name,email) <- addr ]

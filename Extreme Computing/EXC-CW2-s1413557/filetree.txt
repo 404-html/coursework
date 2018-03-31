@@ -1,0 +1,49 @@
+.
+├── filetree.txt
+├── task1
+│   ├── combiner.py
+│   ├── mapper.py
+│   ├── output.out
+│   ├── reducer.py
+│   └── run.sh
+├── task2
+│   ├── mapper.py
+│   ├── output.out
+│   ├── reducer.py
+│   └── run.sh
+├── task3
+│   ├── mapper.py
+│   ├── output.out
+│   ├── reducer2.py
+│   ├── reducer3.py
+│   ├── reducer.py
+│   └── run.sh
+├── task4
+│   ├── output.out
+│   ├── reducer.py
+│   └── run.sh
+├── task5
+│   ├── output.out
+│   ├── reservoir.py
+│   └── run.sh
+├── task6
+│   ├── bitarray-0.8.1.tar.gz
+│   ├── bloom.py
+│   ├── mmh3-2.5.1.tar.gz
+│   ├── output.out
+│   ├── requirements.txt
+│   └── run.sh
+├── task7
+│   ├── bitarray-0.8.1.tar.gz
+│   ├── bloom.py
+│   ├── computehash.py
+│   ├── mmh3-2.5.1.tar.gz
+│   ├── rawbloomfilter
+│   ├── requirements.txt
+│   └── run.sh
+└── task8
+    ├── lossycount.py
+    ├── output.out
+    └── run.sh
+
+8 directories, 38 files

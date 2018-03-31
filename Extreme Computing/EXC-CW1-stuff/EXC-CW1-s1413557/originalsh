@@ -1,0 +1,79 @@
+--------Q1
+hadoop jar /opt/hadoop/hadoop-2.7.3/share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar \
+  -D mapred.reduce.tasks=0 \
+ -input /data/assignments/ex1/webLarge.txt \
+ -output /user/$USER/data/output/task1 \
+ -mapper task1-mapper.py \
+ -file task1-mapper.py
+
+--------Q2
+hadoop jar /opt/hadoop/hadoop-2.7.3/share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar \
+ -input /user/$USER/data/output/task1 \
+ -output /user/$USER/data/output/task2 \
+ -mapper task2-mapper.py \
+ -file task2-mapper.py \
+ -reducer task2-reducer.py \
+ -file task2-reducer.py
+
+--------Q3
+hadoop jar /opt/hadoop/hadoop-2.7.3/share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar \
+  -D mapred.reduce.tasks=1 \
+ -input /user/$USER/data/output/task2 \
+ -output /user/$USER/data/output/task3 \
+ -mapper task3-mapper.py \
+ -file task3-mapper.py \
+ -reducer task3-reducer.py \
+ -file task3-reducer.py
+
+--------Q4
+hadoop jar /opt/hadoop/hadoop-2.7.3/share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar \
+ -input /user/$USER/data/output/task2 \
+ -output /user/$USER/data/output/task4 \
+ -mapper task4-mapper.py \
+ -file task4-mapper.py \
+ -reducer task4-reducer.py \
+ -file task4-reducer.py
+
+--------Q5
+hadoop jar /opt/hadoop/hadoop-2.7.3/share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar \
+  -D mapred.reduce.tasks=1 \
+  -D mapreduce.job.output.key.comparator.class=org.apache.hadoop.mapreduce.lib.partition.KeyFieldBasedComparator \
+  -D stream.num.map.output.key.fields=2 \
+  -D mapreduce.partition.keycomparator.options=-k2,2nr \
+ -input /user/$USER/data/output/task4 \
+ -output /user/$USER/data/output/task5 \
+ -mapper /bin/cat \
+ -reducer task5-reducer.py \
+ -file task5-reducer.py \
+ -partitioner org.apache.hadoop.mapred.lib.KeyFieldBasedPartitioner
+
+--------Q6
+hadoop jar /opt/hadoop/hadoop-2.7.3/share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar \
+  -D mapred.reduce.tasks=1 \
+ -input /user/$USER/data/output/task4 \
+ -output /user/$USER/data/output/task6 \
+ -mapper /bin/cat \
+ -reducer task6-reducer.py \
+ -file task6-reducer.py
+
+--------Q7
+hadoop jar /opt/hadoop/hadoop-2.7.3/share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar \
+  -D mapred.reduce.tasks=1 \
+  -D mapreduce.job.output.key.comparator.class=org.apache.hadoop.mapreduce.lib.partition.KeyFieldBasedComparator \
+  -D stream.num.map.output.key.fields=4 \
+  -D mapreduce.partition.keycomparator.options="-k2,2n -k1,1r -k3,3" \
+ -input /data/assignments/ex1/uniLarge.txt \
+ -output /user/$USER/data/output/task7 \
+ -mapper task7-mapper.py \
+ -file task7-mapper.py \
+ -reducer task7-reducer.py \
+ -file task7-reducer.py
+
+--------Q8
+hadoop jar /opt/hadoop/hadoop-2.7.3/share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar \
+  -D mapred.reduce.tasks=1 \
+ -input /user/$USER/data/output/task7 \
+ -output /user/$USER/data/output/task8 \
+ -mapper /bin/cat \
+ -reducer task8-reducer.py \
+ -file task8-reducer.py

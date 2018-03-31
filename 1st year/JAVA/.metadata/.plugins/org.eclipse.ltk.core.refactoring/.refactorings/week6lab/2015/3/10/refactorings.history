@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy 2 elements to &apos;week7lab/src/music&apos;&#x0A;- Original project: &apos;week6lab&apos;&#x0A;- Destination element: &apos;week7lab/src/music&apos;&#x0A;- Original elements:&#x0A;     MusicTrack.java&#x0A;     Favourites.java" description="Copy compilation units" destination="=week7lab/src&lt;music" element1="/src&lt;{MusicTrack.java" element2="/src&lt;{Favourites.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1425373648313" units="2" version="1.0"/>
+</session>

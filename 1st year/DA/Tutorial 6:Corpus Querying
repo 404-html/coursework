@@ -1,0 +1,88 @@
+	Question 1:
+
+There seems to be one line that cannot be found just entering "great" "deal",
+I think this is not affected by making it case insensitive?
+And there are no people having name of "great" or "deal"?
+
+DICKENS> "Great" "deal";
+  2331583: sir . Immense - immense ! <Great deal> done by steam , sir . Ah
+
+  	Question 2:
+
+There are several lines that have uppercase "Sit" variations, and I googled and find that there is actually people name start with "sit" : "Sitembile", and a lot of the names are start with "sat", this may be affected greatly by making is case insensitive.
+
+DICKENS> ("Sits.*"|"Sitt.*");                  
+     4618: ce to desire to do that . <Sitting-room> , bedroom , lumber-room 
+DICKENS> "Sat.*"
+   142749:  sometimes come over on a <Saturday> , and that he could some
+   147232: me of his quotation , ' " <Satan> finds some mischief stil
+
+   	Question 3:
+
+All of the verb tags start with "VB" or "V".
+
+DICKENS> [pos="VB.*"]
+        7: AROL by Charles Dickens I <have> endeavoured in this Ghos
+
+	Question 4:
+
+DICKENS> [pos != "NN.*"]
+        0:                           <A> CHRISTMAS CAROL by Charl
+
+	Question 5:
+
+DICKENS> [(pos="NN.*")&(word="lock")];
+     4056: e , having his key in the <lock> of the door , saw in the
+
+     	Question 6:
+
+It allow me to search for a word in different form easier.
+
+DICKENS> ("sits.*"|"sitt.*"|"Sits.*"|"Sitt.*"|"sat.*"|"Sat.*");
+      962: - old/old Scrooge/Scrooge <sat/sit> busy/busy in/in his/his 
+                                   
+DICKENS> ("sits.*"|"sitt.*"|"Sits.*"|"Sitt.*"|"sat.*"|"Sat.*");
+      962: istmas Eve -- old Scrooge <sat> busy in his counting-hou
+
+      	Question 7:
+
+DICKENS> Q1 = "girl"; count Q1 by word;               
+988     girl  [#0-#987]
+
+	Question 8: 
+
+988/3407085?
+
+	Question 9:
+
+DICKENS> Q4 = [word = "[a-zA-Z].*"] [word = "[a-zA-Z].*"]; count Q4 by word;
+14748   of the  [#1403263-#1418010]
+
+	Question 10:
+
+I think that all of the first 7 are collocation?
+
+DICKENS> Q4 = [pos = "JJ.*"] [pos = "NN.*"]; count Q4 by word;              
+781     old man  [#66117-#66897]
+621     young lady  [#109161-#109781]
+575     old gentleman  [#64779-#65353]
+473     young man  [#109824-#110296]
+422     young gentleman  [#108323-#108744]
+396     old lady  [#65654-#66049]
+309     old woman  [#67783-#68091]
+283     long time  [#52995-#53277]
+253     last night  [#45598-#45850]
+241     great deal  [#33961-#34201]
+
+	Question 11:
+
+Lots of bigram can start with great, but not many can end with deal.
+
+DICKENS> Q4 = [(pos="JJ.*")&(word="great")] [(pos="NN.*")&(word="deal")]; size Q4;
+241
+DICKENS> Q4 = [(pos="JJ.*")&(word!="great")] [(pos="NN.*")&(word="deal")]; size Q4;
+216
+DICKENS> Q4 = [(pos="JJ.*")&(word="great")] [(pos="NN.*")&(word!="deal")]; size Q4;
+2714
+DICKENS> Q4 = [(pos="JJ.*")&(word!="great")] [(pos="NN.*")&(word!="deal")]; size Q4;
+107902

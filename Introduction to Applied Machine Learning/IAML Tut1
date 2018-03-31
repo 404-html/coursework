@@ -1,0 +1,16 @@
+1) p(Y=ham|X=yes) = P(Y=ham)P(X=yes|Y=ham)/P(X=Yes)
+	    		  = 0.5 * 0.02 / (0.02 + 0.5)
+			  	  = 1/52
+
+2) a) Unsupervised, to learn about data
+   b) Supervised, to predict the function
+
+3) P(P|10011110) = P(P) * 1/Z * 2/6 * 1/6 * 1/6 * 5/6 * 5/6 * 1/6 * 4/6 * 5/6
+   P(S....)      = P(S).....   5*5*2*5*2*1*1*1 / 6^8
+	PP = 1000/6C
+	PS = 500/7C
+	It's more likely to be politics.
+
+4) a) R1...R9,isSunny
+   b) 9, Categorical.
+   C) 7 colors

@@ -1,0 +1,15 @@
+public class Engineer {
+
+	private String name;
+	private int salary;
+	
+	name : String and salary : int and the following public interface:
+		public class Engineer
+		Engineer(String name, int salary) constructor
+		String getName() getter
+		void setName(String name) setter
+		int getSalary() getter
+		void setSalary(int salary) setter
+		String toString() return \Name (Salary)" e.g.
+		\
+}

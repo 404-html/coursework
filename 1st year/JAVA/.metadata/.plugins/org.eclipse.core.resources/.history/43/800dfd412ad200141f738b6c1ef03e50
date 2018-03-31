@@ -1,0 +1,18 @@
+public class ProjectDate {
+
+	private int weekNo = 0;
+	private int dayNo = 1;
+	
+	public ProjectDate(){
+		
+	}
+	
+	public int getWeekNo(){
+		return weekNo;
+	}
+	void setWeekNo(int n)
+	int getDayNo()
+	void setDayNo(int n)
+	void advance(int n)
+	String toString()
+}

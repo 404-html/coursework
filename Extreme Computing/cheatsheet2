@@ -1,0 +1,276 @@
+
+mapred job -kill $jobid
+
+mapred job -list all | grep $USER
+
+#dun do it
+hdfs dfs -rm -r /user/$USER/data/output/
+
+hdfs dfs -copyToLocal /user/$USER/data/output/ Desktop/output
+
+hdfs dfs -cat /user/$USER/data/output/*
+
+ssh scutter$(seq -w 1 12 | shuf -n 1)
+
+Part 1
+/data/assignments/ex1/webSmall.txt
+/data/assignments/ex1/webLarge.txt
+Part2s
+/data/assignments/ex1/uniSmall.txt
+/data/assignments/ex1/uniLarge.txt
+Tool
+/bin/cat
+/dev/null
+
+cat example3.txt | ./task2-mapper.py | sort | ./task2-reducer.py 
+
+cat example3.txt | ./task3-mapper.py | sort | ./task3-reducer.py 
+
+hdfs dfs -cat /data/assignments/ex1/uniSmall.txt
+
+hadoop jar /opt/hadoop/hadoop-2.7.3/share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar \
+ -input <input> \
+ -output <output> \
+ -mapper mapper.py \
+ -file mapper.py \
+ -reducer reducer.py \
+ -file reducer.py
+
+
+░░░░░░░░░░░░░░░░░░░▄▄▄▄▄▄░░░░░░░░░
+░░░░░░░░░░░░█▀█▄▄▀▀░░░░░░▀█▄░░░░░░
+░░░░░░░█▀▀▀▀░░░░░░░░░░░░░░░░▀▄▄▄▄░
+░░░░░▄▄▀░░░▄█░░░░░░░░░░░░░░░░▄▄██▄
+░░░░░█░░▄█▀░░▀▀▀▀▀▄▄░░░░░░░▄▄█░▀█░
+░░░░░█░▄▀░░░░░░░░░░░▀▀▀▀▄▄███░░░▀▄
+░░░░░▀▄█▄███▄▄░░░▄▄▄▄░░░░▄▀░░░░░░█
+░░░░░░█▄█▀██▀░░░░█▀▄▄▀░░█░░░░░░░█▀
+░░░░░██░██▀░░░░░▄█▄███░░█░░░░░░░█░
+░░░▄▄█▀█▄░░▄▄▄▄░░█░░░░▄▀░░░░░░░█░░
+░▄▀░░███▄░░▀▀░▀░░░░░▄█▄░░░░░░░█▀░░
+█░░░░█░█▄▄▄▄▄▄▄░░░░░█▀███░░░░░█░░░
+█░░░░██████▀▀▀█░░░░░░██░█▄▄▄▄▄█░░░
+░░░░░██░▄██▀▀██░█░░░▄▀██▀░░░░▀▀▀▄░
+░░░░░█▀██░░▄███░█░░░█▀░░░░░░░░░░░█
+░░░░░░▄█▀▀▀██▀░░░░▄▀░░░░░░░░░░░░░▀
+░░░░░░▀▄░░░░░░░░▄▀░░░░░░░░░░░░░░░░
+░░░░░░░░█▄▀▀▀▄▀▀░░░░░░░GENIUS░░░░░
+
+
+
+hadoop jar /opt/hadoop/hadoop-2.7.3/share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar \
+  -D mapred.reduce.tasks=1 \
+  -D mapreduce.job.output.key.comparator.class=org.apache.hadoop.mapreduce.lib.partition.KeyFieldBasedComparator \
+  -D stream.num.map.output.key.fields=4 \
+  -D mapreduce.partition.keycomparator.options="-k2,2n -k1,1r -k3,3" \
+ -input /data/assignments/ex1/uniLarge.txt \
+ -output /user/$USER/data/output/task7 \
+ -mapper mapper.py \
+ -file mapper.py \
+ -reducer reducer.py \
+ -file reducer.py
+
+hadoop jar /opt/hadoop/hadoop-2.7.3/share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar \
+  -D mapred.reduce.tasks=1 \
+  -D mapreduce.job.output.key.comparator.class=org.apache.hadoop.mapreduce.lib.partition.KeyFieldBasedComparator \
+  -D stream.num.map.output.key.fields=2 \
+  -D mapreduce.partition.keycomparator.options=-k2,2nr \
+ -input /user/$USER/data/output/task4 \
+ -output /user/$USER/data/output/task5 \
+ -mapper /bin/cat \
+ -reducer reducer.py \
+ -file reducer.py \
+ -partitioner org.apache.hadoop.mapred.lib.KeyFieldBasedPartitioner
+
+
+ -D mapreduce.job.output.key.comparator.class=org.apache.hadoop.mapreduce.lib.partition.KeyFieldBasedComparator
+ -D mapreduce.map.output.key.field.separator=" "
+ -D stream.map.output.field.separator=" "
+ -D stream.num.map.output.key.fields=2
+ -D num.key.fields.for.partition=1
+ -D mapreduce.partition.keycomparator.options="-k1,1n -k2,2n"
+ -D mapreduce.partition.keypartitioner.options="-k1,1n"
+
+--- Task 1 ---
+
+hadoop jar /opt/hadoop/hadoop-2.7.3/share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar \
+  -D mapreduce.job.output.key.comparator.class=org.apache.hadoop.mapreduce.lib.partition.KeyFieldBasedComparator \
+  -D mapreduce.map.output.key.field.separator=" " \
+  -D stream.map.output.field.separator=" " \
+  -D stream.num.map.output.key.fields=3 \
+  -D num.key.fields.for.partition=1 \
+  -D mapreduce.partition.keycomparator.options="-k1,1 -k3,3n" \
+  -D mapreduce.partition.keypartitioner.options="-k1,1" \
+ -input /data/assignments/ex2/part1/large \
+ -output /user/$USER/assignment2/task1-temp \
+ -mapper ~/Desktop/EXC-CW2-s1413557/task1/mapper.py \
+ -file ~/Desktop/EXC-CW2-s1413557/task1/mapper.py \
+ -combiner ~/Desktop/EXC-CW2-s1413557/task1/combiner.py \
+ -file ~/Desktop/EXC-CW2-s1413557/task1/combiner.py \
+ -reducer ~/Desktop/EXC-CW2-s1413557/task1/reducer.py \
+ -file ~/Desktop/EXC-CW2-s1413557/task1/reducer.py \
+ -partitioner org.apache.hadoop.mapred.lib.KeyFieldBasedPartitioner
+
+#some final sorting 'n stuff
+hadoop jar /opt/hadoop/hadoop-2.7.3/share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar \
+  -D mapreduce.job.reduces=1 \
+  -D mapreduce.job.output.key.comparator.class=org.apache.hadoop.mapreduce.lib.partition.KeyFieldBasedComparator \
+  -D mapreduce.map.output.key.field.separator=" " \
+  -D stream.map.output.field.separator=" " \
+  -D stream.num.map.output.key.fields=2 \
+  -D num.key.fields.for.partition=1 \
+  -D mapreduce.partition.keycomparator.options="-k1,1" \
+  -D mapreduce.partition.keypartitioner.options="-k1,1" \
+ -input /user/$USER/assignment2/task1-temp/* \
+ -output /user/$USER/assignment2/task1/ \
+ -mapper cat \
+ -reducer cat \
+ -partitioner org.apache.hadoop.mapred.lib.KeyFieldBasedPartitioner
+
+hdfs dfs -rm -r assignment2/task1-temp/
+
+--- Task 2 ---
+
+cat ~/Desktop/stackSmall.txt | ~/Desktop/EXC-CW2-s1413557/task2/mapper.py
+
+hdfs dfs -rm -r assignment2/task2/
+
+# Sets memory.mb=2500 for my terrible mapper, probably shouldn't do this.
+# -D mapreduce.map.memory.mb=2500 \
+# "MapReduce is currently still broken."
+#    - Kenneth, 6 Nov, on Piazza question id 216
+
+hadoop jar /opt/hadoop/hadoop-2.7.3/share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar \
+  -D mapreduce.job.reduces=1 \
+  -D mapreduce.job.output.key.comparator.class=org.apache.hadoop.mapreduce.lib.partition.KeyFieldBasedComparator \
+  -D mapreduce.map.output.key.field.separator=" " \
+  -D stream.map.output.field.separator=" " \
+  -D stream.num.map.output.key.fields=2 \
+  -D mapreduce.partition.keycomparator.options=-k1,1nr \
+ -input /data/assignments/ex2/part2/stackLarge.txt \
+ -output /user/$USER/assignment2/task2 \
+ -mapper ~/Desktop/EXC-CW2-s1413557/task2/mapper.py \
+ -file ~/Desktop/EXC-CW2-s1413557/task2/mapper.py \
+ -reducer ~/Desktop/EXC-CW2-s1413557/task2/reducer.py \
+ -file ~/Desktop/EXC-CW2-s1413557/task2/reducer.py \
+ -partitioner org.apache.hadoop.mapred.lib.KeyFieldBasedPartitioner
+
+--- Task 3 ---
+
+cat ~/Desktop/stackSmall.txt | ~/Desktop/EXC-CW2-s1413557/task3/mapper.py | sort -k2,2n -k1,1 -t " "
+
+cat ~/Desktop/stackSmall.txt | ~/Desktop/EXC-CW2-s1413557/task3/mapper.py | sort -k2,2n -k1,1 | ~/Desktop/EXC-CW2-s1413557/task3/reducer.py
+
+cat ~/Desktop/stackSmall.txt | ~/Desktop/EXC-CW2-s1413557/task3/mapper.py | sort -k1,1n | ~/Desktop/EXC-CW2-s1413557/task3/combiner.py | sort -k2,2nr -t ";" | ~/Desktop/EXC-CW2-s1413557/task3/reducer.py 
+
+hdfs dfs -rm -r assignment2/task3/
+hdfs dfs -rm -r assignment2/task3-temp/
+hdfs dfs -rm -r assignment2/task3-temp2/
+
+
+# Sets memory.mb=2500 for my terrible mapper, probably shouldn't do this.
+#  -D mapreduce.map.memory.mb=2500 \
+# Without this line, the mappers fail a lot, sometimes it fails completely.
+# Container [pid=78135,containerID=container_1509985674868_0577_01_000002] is running beyond virtual memory limits. Current usage: 280.3 MB of 1 GB physical memory used; 2.2 GB of 2.1 GB virtual memory used. Killing container.
+# "MapReduce is currently still broken."
+#    - Kenneth, Nov, on Piazza question id 216
+
+hadoop jar /opt/hadoop/hadoop-2.7.3/share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar \
+  -D mapreduce.map.memory.mb=2500 \
+  -D mapreduce.job.output.key.comparator.class=org.apache.hadoop.mapreduce.lib.partition.KeyFieldBasedComparator \
+  -D mapreduce.map.output.key.field.separator=" " \
+  -D stream.map.output.field.separator=" " \
+  -D stream.num.map.output.key.fields=4 \
+  -D num.key.fields.for.partition=4 \s
+  -D mapreduce.partition.keycomparator.options="-k1,1n -k2,2" \
+  -D mapreduce.partition.keypartitioner.options="-k1,2" \
+ -input /data/assignments/ex2/part2/stackLarge.txt \
+ -output /user/$USER/assignment2/task3-temp/ \
+ -mapper ~/Desktop/EXC-CW2-s1413557/task3/mapper.py \
+ -file ~/Desktop/EXC-CW2-s1413557/task3/mapper.py \
+ -reducer ~/Desktop/EXC-CW2-s1413557/task3/reducer.py \
+ -file ~/Desktop/EXC-CW2-s1413557/task3/reducer.py \
+ -partitioner org.apache.hadoop.mapred.lib.KeyFieldBasedPartitioner
+
+hadoop jar /opt/hadoop/hadoop-2.7.3/share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar \
+  -D mapreduce.job.reduces=1 \
+  -D mapreduce.job.output.key.comparator.class=org.apache.hadoop.mapreduce.lib.partition.KeyFieldBasedComparator \
+  -D mapreduce.map.output.key.field.separator=" " \
+  -D stream.map.output.field.separator=" " \
+  -D stream.num.map.output.key.fields=2 \
+  -D mapreduce.partition.keycomparator.options="-k1,1n -k2,2n" \
+ -input /user/$USER/assignment2/task3-temp/* \
+ -output /user/$USER/assignment2/task3-temp2 \
+ -mapper cat \
+ -reducer ~/Desktop/EXC-CW2-s1413557/task3/reducer2.py \
+ -file ~/Desktop/EXC-CW2-s1413557/task3/reducer2.py \
+ -partitioner org.apache.hadoop.mapred.lib.KeyFieldBasedPartitioner
+
+hadoop jar /opt/hadoop/hadoop-2.7.3/share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar \
+  -D mapreduce.job.reduces=1 \
+  -D mapreduce.job.output.key.comparator.class=org.apache.hadoop.mapreduce.lib.partition.KeyFieldBasedComparator \
+  -D mapreduce.map.output.key.field.separator=";" \
+  -D stream.map.output.field.separator=";" \
+  -D stream.num.map.output.key.fields=3 \
+  -D mapreduce.partition.keycomparator.options=-k2,2nr \
+ -input /user/$USER/assignment2/task3-temp2/* \
+ -output /user/$USER/assignment2/task3 \
+ -mapper cat \
+ -reducer ~/Desktop/EXC-CW2-s1413557/task3/reducer3.py \
+ -file ~/Desktop/EXC-CW2-s1413557/task3/reducer3.py \
+ -partitioner org.apache.hadoop.mapred.lib.KeyFieldBasedPartitioner
+
+hdfs dfs -rm -r assignment2/task3-temp/
+hdfs dfs -rm -r assignment2/task3-temp2/
+
+--- Task 4 ---
+
+cat ~/Desktop/ints | ~/Desktop/EXC-CW2-s1413557/task4/mapper.py
+
+hdfs dfs -rm -r assignment2/task4/
+
+hadoop jar /opt/hadoop/hadoop-2.7.3/share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar \
+  -D mapreduce.job.reduces=1 \
+ -input /data/assignments/ex2/part3/webLarge.txt \
+ -output /user/$USER/assignment2/task4 \
+ -mapper cat \
+ -reducer ~/Desktop/EXC-CW2-s1413557/task4/reducer.py \
+ -file ~/Desktop/EXC-CW2-s1413557/task4/reducer.py
+
+# Using same code for mapper and reducer. (Just to reduce work on reducer)
+# Each mapper pick 1 line from stream, and reducer pick 1 line from mapper outputs. 
+hadoop jar /opt/hadoop/hadoop-2.7.3/share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar \
+  -D mapreduce.job.reduces=1 \
+ -input /data/assignments/ex2/part3/webLarge.txt \
+ -output /user/$USER/assignment2/task4 \
+ -mapper ~/Desktop/EXC-CW2-s1413557/task4/reducer.py \
+ -file ~/Desktop/EXC-CW2-s1413557/task4/reducer.py \
+ -reducer ~/Desktop/EXC-CW2-s1413557/task4/reducer.py \
+ -file ~/Desktop/EXC-CW2-s1413557/task4/reducer.py
+
+--- Task 5 --- 
+
+cat /afs/inf.ed.ac.uk/group/teaching/exc/ex2/part3/webSmall.txt | ~/Desktop/EXC-CW2-s1413557/task5/reservoir.py
+
+cat /afs/inf.ed.ac.uk/group/teaching/exc/ex2/part3/webLarge.txt | ~/Desktop/EXC-CW2-s1413557/task5/reservoir.py
+
+--- Task 6 --- 
+
+cat ~/Desktop/hashtest.txt | python ~/Desktop/EXC-CW2-s1413557/task6/bloom.py -n 1897987
+
+cat /afs/inf.ed.ac.uk/group/teaching/exc/ex2/part3/webLarge.txt \
+  | python ~/Desktop/EXC-CW2-s1413557/task6/bloom.py -n 1897987
+
+--- Task 7 --- 
+
+cat /afs/inf.ed.ac.uk/group/teaching/exc/ex2/part3/webLarge.txt \
+  | parallel --pipe python ~/Desktop/EXC-CW2-s1413557/task7/computehash.py -n 1897987 \
+  | python ~/Desktop/EXC-CW2-s1413557/task7/bloom.py -n 1897987
+
+--- Task 8 --- 
+
+cat /afs/inf.ed.ac.uk/group/teaching/exc/ex2/part4/queriesLarge.txt  | python ~/Desktop/EXC-CW2-s1413557/task8/lossycount.py
+
+
+cat /afs/inf.ed.ac.uk/group/teaching/exc/ex2/part4/queriesLarge.txt  | python ~/Desktop/EXC-CW2-s1413557/task8/notlossycount.py -p 0.01
+

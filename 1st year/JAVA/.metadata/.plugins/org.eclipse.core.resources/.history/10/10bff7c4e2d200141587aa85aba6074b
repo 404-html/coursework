@@ -1,0 +1,12 @@
+public class InvestigateLens {
+
+	
+	public static boolean checkGetPut(String[] oldSource, Pair[] newView){
+		Pair[] a = Lens.get(Lens.put(oldSource, newView));
+		boolean out = true;
+		for (int i = 0; i<oldSource.length;i++){
+			out = out && (a[i].getChar()==newView[i].getChar())
+					  && (a[i].getInt() ==newView[i].getInt ());
+		}
+	}
+}

@@ -1,0 +1,4 @@
+Used python libraries:
+
+bitarray-0.8.1
+mmh3-2.5.1

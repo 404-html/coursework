@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE restaurants[
+<!ELEMENT restaurants (restaurant+)>
+<!ELEMENT restaurant ((address,cuisine,phoneno)+)>
+<!ELEMENT address (#PCDATA)>
+<!ELEMENT cuisine (#PCDATA)>
+<!ELEMENT phoneno (#PCDATA)>
+<!ATTLIST restaurant name CDATA #REQUIRED>
+]>
+<restaurants>
+    <restaurant name="The Olive Tree">
+        <address>27 Marshall Street, Edinburgh, EH8 9BJ</address>
+        <cuisine>Mediterranean</cuisine>
+        <phoneno>0131 667 9997</phoneno>
+    </restaurant>
+    <restaurant name="Nawroz">
+        <address>26 Potterow, Edinburgh, EH8 9BT</address>
+        <cuisine>Kurdish</cuisine>
+        <phoneno>0131 667 2299</phoneno>
+    </restaurant>
+    <restaurant name="Kebab Mahal">
+        <address>7 Nicolson Square, Edinburgh, EH8 9BH</address>
+        <cuisine>Indian</cuisine>
+        <phoneno>0131 622 7228</phoneno> 
+    </restaurant>
+    <restaurant name="Sylvesters">
+        <address>55 West Nicolson Street, Edinburgh, EH8 9DB</address>
+        <cuisine>Scottish</cuisine>
+        <phoneno>0131 662 4493</phoneno>
+    </restaurant>
+    <restaurant name="Buffalo Grill">
+        <address>12 Chapel Street, Edinburgh, EH8 9AY</address>
+        <cuisine>North American</cuisine>
+        <phoneno>0131 667 7427</phoneno>
+    </restaurant>
+    <restaurant name="Nile Valley">
+        <address>6 Chapel Street, Edinburgh, EH8 9AY</address>
+        <cuisine>Cafe</cuisine>
+        <phoneno>0131 667 8200</phoneno>
+    </restaurant>
+    <restaurant name="Kalpna">
+        <address>2 St Patrick's Square, Edinburgh, EH8 9EZ</address>
+        <cuisine>Indian</cuisine>
+        <phoneno>0131 667 9890</phoneno>
+    </restaurant>
+    <restaurant name="Suruchi">
+        <address>14A Nicholson Street</address>
+        <cuisine>Indian</cuisine>
+        <phoneno>0131 556 6583</phoneno>
+    </restaurant>
+    <restaurant name="Ciao Roma">
+        <address>64 South Bridge</address>
+        <cuisine>Italian</cuisine>
+        <phoneno>0131 557 3777</phoneno>
+    </restaurant>
+    <restaurant name="Ti Amo">
+        <address>16 Nicolson Street, Old Town, Edinburgh, EH8 9DH</address>
+        <cuisine>Italian</cuisine>
+        <phoneno>0131 556 5678</phoneno>
+    </restaurant>
+</restaurants>

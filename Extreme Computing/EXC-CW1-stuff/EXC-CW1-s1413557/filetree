@@ -1,0 +1,42 @@
+/afs/inf.ed.ac.uk/user/s14/s1413557/Desktop/EXC-CW1-s1413557
+├── filetree
+├── oldfiletree		#Filetree before renaming "task1-mapper.py" to "mapper.py
+├── originalsh      #Old sh of all task, using "taskX-" prefix
+├── task1
+│   ├── mapper.py
+│   ├── output1.out
+│   └── task1.sh
+├── task2
+│   ├── mapper.py
+│   ├── output2.out
+│   ├── reducer.py
+│   └── task2.sh
+├── task3
+│   ├── mapper.py
+│   ├── output3.out
+│   ├── reducer.py
+│   └── task3.sh
+├── task4
+│   ├── mapper.py
+│   ├── output4.out
+│   ├── reducer.py
+│   └── task4.sh
+├── task5
+│   ├── output5.out
+│   ├── reducer.py
+│   └── task5.sh
+├── task6
+│   ├── output6.out
+│   ├── reducer.py  #Really slow stuff
+│   └── task6.sh
+├── task7
+│   ├── mapper.py
+│   ├── output7.out
+│   ├── reducer.py
+│   └── task7.sh
+└── task8
+    ├── output8.out
+    ├── reducer.py
+    └── task8.sh
+
+8 directories, 31 files

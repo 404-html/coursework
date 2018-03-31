@@ -1,0 +1,112 @@
+****************************************
+* A - Addresses of all the restaurants *
+****************************************
+
+XPath expression:
+
+//address/text()
+
+Response from xmllint:
+
+/ > cat //address/text()
+ -------
+27 Marshall Street, Edinburgh, EH8 9BJ
+ -------
+26 Potterow, Edinburgh, EH8 9BT
+ -------
+7 Nicolson Square, Edinburgh, EH8 9BH
+ -------
+55 West Nicolson Street, Edinburgh, EH8 9DB
+ -------
+12 Chapel Street, Edinburgh, EH8 9AY
+ -------
+6 Chapel Street, Edinburgh, EH8 9AY
+ -------
+2 St Patrick's Square, Edinburgh, EH8 9EZ
+ -------
+14A Nicholson Street
+ -------
+64 South Bridge
+ -------
+16 Nicolson Street, Old Town, Edinburgh, EH8 9DH
+
+************************************
+* B - Names of all the restaurants *
+************************************
+
+XPath expression: 
+
+//restaurant/@name
+
+Response from xmllint:
+
+ -------
+ name="The Olive Tree"
+ -------
+ name="Nawroz"
+ -------
+ name="Kebab Mahal"
+ -------
+ name="Sylvesters"
+ -------
+ name="Buffalo Grill"
+ -------
+ name="Nile Valley"
+ -------
+ name="Kalpna"
+ -------
+ name="Suruchi"
+ -------
+ name="Ciao Roma"
+ -------
+ name="Ti Amo"
+
+
+************************************
+* C - Address of Kalpna restaurant *
+************************************
+
+XPath expression:
+
+/ > cat //restaurant[@name="Kalpna"]/address/text()   
+
+Response from xmllint:
+        
+ -------
+2 St Patrick's Square, Edinburgh, EH8 9EZ
+
+
+********************************************************************
+* *D - Telephone numbers of all restaurants that serve Indian food *
+********************************************************************
+
+XPath expression:
+
+/ > cat //restaurant[cuisine="Indian"]/phoneno/text()
+
+Response from xmllint:
+
+ -------
+0131 622 7228
+ -------
+0131 667 9890
+ -------
+0131 556 6583
+
+**********************************************************
+* *E - Names of all restaurants which serve Italian food *
+**********************************************************
+
+XPath expression:
+
+/ > cat //restaurant[cuisine="Italian"]/@name
+
+Response from xmllint:
+
+ -------
+ name="Ciao Roma"
+ -------
+ name="Ti Amo"
+
+
+*********************************************************************

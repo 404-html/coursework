@@ -1,0 +1,4 @@
+re.match("[0|1][0|1][0|1]","010asda")
+re.match("[0|1][0|1][0|1]","1aa")
+re.findall("[a-zA-Z]*ly","it is likely to happen rarely")
+re.sub("wh[a-zA-Z]*","WH-word","who should do what?")

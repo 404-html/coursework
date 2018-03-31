@@ -1,0 +1,30 @@
+Chain INPUT (policy ACCEPT)
+target     prot opt source               destination         
+ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:ssh
+ACCEPT     udp  --  anywhere             anywhere             udp dpt:ssh
+ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:ftp
+ACCEPT     udp  --  anywhere             anywhere             udp dpt:fsp
+ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:http
+ACCEPT     udp  --  anywhere             anywhere             udp dpt:http
+ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:https
+ACCEPT     udp  --  anywhere             anywhere             udp dpt:https
+ACCEPT     udp  --  anywhere             anywhere             udp dpt:4445
+ACCEPT     tcp  --  bob                  anywhere            
+DROP       all  --  anywhere             anywhere            
+
+Chain FORWARD (policy ACCEPT)
+target     prot opt source               destination         
+
+Chain OUTPUT (policy ACCEPT)
+target     prot opt source               destination         
+ACCEPT     tcp  --  anywhere             anywhere             tcp spt:ssh
+ACCEPT     udp  --  anywhere             anywhere             udp spt:ssh
+ACCEPT     tcp  --  anywhere             anywhere             tcp spt:ftp
+ACCEPT     udp  --  anywhere             anywhere             udp spt:fsp
+ACCEPT     tcp  --  anywhere             anywhere             tcp spt:http
+ACCEPT     udp  --  anywhere             anywhere             udp spt:http
+ACCEPT     tcp  --  anywhere             anywhere             tcp spt:https
+ACCEPT     udp  --  anywhere             anywhere             udp spt:https
+ACCEPT     udp  --  anywhere             anywhere             udp dpt:4444
+ACCEPT     tcp  --  anywhere             bob                 
+DROP       all  --  anywhere             anywhere            

@@ -1,0 +1,33 @@
+public class ProjectDate {
+
+	private int weekNo = 0;
+	private int dayNo = 1;
+	
+	public ProjectDate(){
+		
+	}
+	
+	public int getWeekNo(){
+		return weekNo;
+	}
+	
+	public void setWeekNo(int n){
+		this.weekNo = n;
+	}
+	
+	public int getDayNo(){
+		return dayNo;
+	}
+	
+	public void setDayNo(int n){
+		if (n>=1 && n<=5){
+			this.dayNo = n;
+		}
+	}
+		
+	public void advance(int n){
+		int rem = n / 5;
+		int mod = n % 5;
+	}
+	String toString()
+}

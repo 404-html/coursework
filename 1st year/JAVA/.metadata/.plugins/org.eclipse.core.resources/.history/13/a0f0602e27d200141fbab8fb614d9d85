@@ -1,0 +1,17 @@
+public class Engineer {
+
+	private String name;
+	private int salary;
+
+	public Engineer(String name, int salary){
+		this.name = name;
+		this.salary = salary;
+	}
+	
+		String getName() getter
+		void setName(String name) setter
+		int getSalary() getter
+		void setSalary(int salary) setter
+		String toString() return \Name (Salary)" e.g.
+		\
+}

@@ -1,0 +1,10 @@
+export EXC_LAB3_ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+echo "EXC_LAB3_ROOT_DIR set to $EXC_LAB3_ROOT_DIR"
+export PATH=$PATH:$EXC_LAB3_ROOT_DIR/bin
+export PYTHONPATH=$PYTHONPATH:$EXC_LAB3_ROOT_DIR/src
+export LOCAL_HOSTNAME=$(hostname)
+
+function gen_random_string() {
+NUM_LETTERS=$1
+echo $(head /dev/urandom | tr -dc A-Za-z0-9 | head -c $NUM_LETTERS ; echo '')
+}

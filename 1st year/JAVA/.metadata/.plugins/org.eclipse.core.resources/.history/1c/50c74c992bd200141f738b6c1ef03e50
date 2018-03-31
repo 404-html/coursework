@@ -1,0 +1,21 @@
+public class Lens {
+	
+	public static Pair[] get(String[] source) {
+		// ADD CODE HERE
+	}
+	
+	public static String[] create(Pair[] view) {
+		// ADD CODE HERE
+	}
+	
+	public static String[] put(String[] oldSource, Pair[] newView) {
+		// Check that the old source and new view have same length.
+		// If they do not, report an error and stop the whole program.
+		if (!(oldSource.length == newView.length)) {
+			throw new RuntimeException("Length of view and source didn't match");
+		}
+		// if we get here at all, we know oldSource.length == newView.length
+		// ADD CODE HERE
+	}
+}
+

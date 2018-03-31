@@ -1,0 +1,7 @@
+public class InvestigateLens {
+
+	
+	public static boolean checkGetPut(String[] oldSource, Pair[] newView){
+		Lens.get(Lens.put(oldSource, newView));
+	}
+}

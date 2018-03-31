@@ -1,0 +1,20 @@
+! :	17 : {(d1.txt, 530), (d2.txt, 201), (d3.txt, 773), (d4.txt, 11), (d5.txt, 97), (d6.txt, 175), (d7.txt, 96), (d8.txt, 9), (d9.txt, 849), (d10.txt, 2553), (d11.txt, 35), (d12.txt, 1035), (d13.txt, 61), (d14.txt, 182), (d15.txt, 541), (d16.txt, 17), (d17.txt, 101)}	
+# :	1 : {(d11.txt, 1)}	
+$ :	3 : {(d1.txt, 2), (d4.txt, 1), (d7.txt, 12)}	
+&#124; :	3 : {(d11.txt, 3), (d14.txt, 12), (d17.txt, 1)}	
+&#91; :	8 : {(d1.txt, 1), (d2.txt, 7), (d4.txt, 257), (d6.txt, 16), (d11.txt, 17), (d14.txt, 90), (d15.txt, 2), (d17.txt, 225)}	
+&#93; :	9 : {(d1.txt, 1), (d2.txt, 7), (d4.txt, 259), (d6.txt, 16), (d8.txt, 5), (d11.txt, 17), (d14.txt, 90), (d15.txt, 2), (d17.txt, 225)}	
+&amp; :	6 : {(d2.txt, 2), (d5.txt, 4), (d7.txt, 1), (d8.txt, 1), (d10.txt, 116), (d13.txt, 2)}	
+&apos; :	17 : {(d1.txt, 409), (d2.txt, 390), (d3.txt, 55), (d4.txt, 18), (d5.txt, 39), (d6.txt, 166), (d7.txt, 59), (d8.txt, 21), (d9.txt, 1088), (d10.txt, 3544), (d11.txt, 88), (d12.txt, 62), (d13.txt, 9), (d14.txt, 740), (d15.txt, 748), (d16.txt, 8), (d17.txt, 40)}	
+&apos;70 :	1 : {(d5.txt, 1)}	
+&apos;A :	2 : {(d10.txt, 1), (d14.txt, 5)}	
+&apos;ARD :	1 : {(d2.txt, 1)}	
+&apos;Abbaye :	1 : {(d10.txt, 1)}	
+&apos;Abbe :	1 : {(d10.txt, 3)}	
+&apos;Absurd :	1 : {(d14.txt, 1)}	
+&apos;Accords :	1 : {(d15.txt, 1)}	
+&apos;Ad :	1 : {(d17.txt, 1)}	
+&apos;Adored :	1 : {(d10.txt, 1)}	
+&apos;Advertiser :	1 : {(d2.txt, 2)}	
+&apos;Agiotage :	1 : {(d10.txt, 1)}	
+&apos;Agoust :	1 : {(d10.txt, 12)}	
